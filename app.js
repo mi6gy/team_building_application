@@ -10,7 +10,8 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-
+const teamBuild = [];
+const teamId = [];
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
@@ -77,7 +78,7 @@ function startApp() {
             {
                 type: 'input',
                 name: 'managersName',
-                message: 'What is your managers name?',
+                message: "What is your manager's name?",
                 validate: answer => {
                     if (answer != "") {
                         return true;
@@ -88,7 +89,7 @@ function startApp() {
             {
                 type: 'input',
                 name: 'managersId',
-                message: 'What is your managers Id?',
+                message: "What is your manager's Id?",
                 validate: answer => {
                     const valid = answer.match(
                         /^[1-9]\d*$/
@@ -102,37 +103,63 @@ function startApp() {
             {
                 type: 'input',
                 name: 'managersEmail',
-                message: 'What is your managers Email address?',
+                message: "What is your manager's Email address?",
                 validate: answer => {
                     if (answer != "") {
                         return true;
                     }
                     return "Please enter an Email address";
                 },
+            },
+            {
+                type: 'input',
+                name: 'managersOffice',
+                message: "What is your manager's office number?",
+                validate: answer => {
+                    if (answer != "") {
+                        return true;
+                    }
+                    return "Please enter an office number";
 
+
+                }
             }
         ]).then(answers => {
-            console.log(answers.managersName, answers.managersId, answers.managersEmail)
-        })
+            const newManager = new Manager(value.name, value.managersId, value.managersEmail, value.managersOffice)
+
+                    //console.log(answers.managersName, answers.managersId, answers.managersEmail, answers.managersOffice)
+                })
 
     }
     createManger()
 }
 startApp();
 
-  //functio to decide who to crerate or stop created (switch case)
-    
-    //function for create engineer
-    //funct for creater intern
-//   function addEmployee(){
-//         inquirer.prompt({
-// type: "list",
-// choices: ["Engineer", "Intern", "DONE"],
-// name: "adding",
+// function addMembers() {
+//     inquirer.prompt([
+//         {
+//             type: "list",
+//             name: "teamMemeber",
+//             choices: ["Engineer", "Intern", "No more members need to be added"],
+//             message: "What role do you want to add to your team?",
+//         }
+//     ])
+// }
+// addMembers();
+
+//   functio to decide who to crerate or stop created (switch case)
+
+//     function for create engineer
+//     funct for creater intern
+// function addEmployee() {
+//     inquirer.prompt({
+//         type: "list",
+//         choices: ["Engineer", "Intern", "DONE"],
+//         name: "adding",
 
 
-//         })
-//     }
-// addEmployee()
+//     })
+// }
+// addEmployee();
 
 
