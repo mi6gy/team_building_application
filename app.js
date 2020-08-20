@@ -9,11 +9,226 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
-const { ADDRGETNETWORKPARAMS } = require("dns");
-const Choice = require("inquirer/lib/objects/choice");
 
 const teamBuild = [];
 const teamId = [];
+
+function startApp() {
+    //create manager
+    function createManger() {
+        inquirer.prompt([
+            {
+                type: 'input',
+                name: 'managersName',
+                message: "What is the manager's name?",
+                validate: answer => {
+                    if (answer != "") {
+                        return true;
+                    }
+                    return "Please enter a character.";
+                }
+            },
+            {
+                type: 'input',
+                name: 'managersId',
+                message: "What is the manager's Id?",
+                validate: answer => {
+                    const valid = answer.match(
+                        /^[1-9]\d*$/
+                    );
+                    if (valid) {
+                        return true;
+                    }
+                    return "Please enter a number gretaer then 0";
+                }
+            },
+            {
+                type: 'input',
+                name: 'managersEmail',
+                message: "What is the manager's Email address?",
+                validate: answer => {
+                    const mail = answer.match(
+                        /\S+@\S+\.\S+/
+                    );
+                    if (mail) {
+                        return true;
+                    }
+                    return "Please enter a valid Email address.";
+                }
+
+            },
+            {
+                type: 'input',
+                name: 'managersOffice',
+                message: "What is the manager's office number?",
+                validate: answer => {
+                    if (answer != "") {
+                        return true;
+                    }
+                    return "Please enter an office number";
+
+                }
+            }
+        ]).then(answer => {
+            console.log(answer.managersName, answer.managersId, answer.managersEmail, answer.managersOffice)
+            const manager = new Manager(answer.managersName, answer.managersId, answer.managersEmail, answer.managersOffice);
+            teamBuild.push(manager);
+            teamId.push(answer.managersId);
+            newMember();
+        })
+    }
+    function newMember() {
+        inquirer.prompt([
+            {
+                type: "list",
+                name: "addRole",
+                message: "What type of memeber would you like to add",
+                choices: ["Engineer", "Intern", "No new memembers needed."]
+            }
+        ]).then(memberChoice => {
+            switch (memberChoice.addRole) {
+                case "Engineer":
+                    addEngineer();
+                    break;
+                case "Intern":
+                    addIntern();
+                    break;
+                default:
+                    generateT();
+            }
+        });
+    }
+    function addEngineer() {
+        inquirer.prompt([
+            {
+                type: 'input',
+                name: 'engineName',
+                message: "What is the name of your Engineer?",
+                validate: answer => {
+                    if (answer != "") {
+                        return true;
+                    }
+                    return "Please enter a character";
+                }
+            },
+            {
+                type: 'input',
+                name: 'engineId',
+                message: "What is the Engineer's ID?",
+                validate: answer => {
+                    const valid = answer.match(
+                        /^[1-9]\d*$/
+                    );
+                    if (valid) {
+                        return true;
+                    }
+                    return "Please enter a number gretaer then 0";
+                }
+            },
+            {
+                type: 'input',
+                name: 'engineEmail',
+                message: "Please enter the Engineer's Email address",
+                validate: answer => {
+                    const mail = answer.match(
+                        /\S+@\S+\.\S+/
+                    );
+                    if (mail) {
+                        return true;
+                    }
+                    return "Please enter a valid Email address.";
+                }
+            },
+            {
+                type: 'input',
+                name: 'engineGit',
+                message: "What is your Engineer's Github username?",
+                validate: answer => {
+                    if (answer != "") {
+                        return true;
+                    }
+                    return "Please enter a character.";
+                }
+            }
+        ]).then(answer => {
+            const engineer = new Engineer(answer.engineName, answer.engineId, answer.engineGit);
+            teamBuild.push(engineer);
+            teamId.push(answer.engineId);
+            newMember();
+        });
+
+    }
+    function addIntern() {
+        inquirer.prompt([
+            {
+                type: 'input',
+                name: 'interName',
+                message: "What is the name of the Intern?",
+                validate: answer => {
+                    if (answer != "") {
+                        return true;
+                    }
+                    return "Please enter a character.";
+                }
+            },
+            {
+                type: 'input',
+                name: 'interId',
+                message: "What is the ID of the Intern?",
+                validate: answer => {
+                    const valid = answer.match(
+                        /^[1-9]\d*$/
+                    );
+                    if (valid) {
+                        return true;
+                    }
+                    return "Please enter a number gretaer then 0";
+                }
+
+            },
+            {
+                type: 'input',
+                name: 'interEmail',
+                message: "What is the Intern's Email address?",
+                validate: answer => {
+                    const mail = answer.match(
+                        /\S+@\S+\.\S+/
+                    );
+                    if (mail) {
+                        return true;
+                    }
+                    return "Please enter a valid Email address.";
+                }
+            },
+            {
+                type: 'input',
+                name: 'interSchool',
+                message: "What university is the Intern attending?",
+                validate: answer => {
+                    if (answer != "") {
+                        return true;
+                    }
+                    return "Please enter a character.";
+                },
+            }
+        ]).then(answer => {
+            const intern = new Intern(answer.interName, answer.interId, answer.interEmail, answer.interSchool);
+            teamBuild.push(intern);
+            teamId.push(answer.interId);
+            newMember();
+        });
+    }
+    function generateT() {
+        if (!fs.existsSync(OUTPUT_DIR)) {
+            fs.mkdirSync(OUTPUT_DIR)
+        };
+        return fs.writeFileSync(outputPath, render(teamBuild), "utf8")
+
+    }
+    createManger();
+}
+startApp();
+
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
@@ -67,174 +282,3 @@ const teamId = [];
 //      - by calling the render function and passsing an 'array' as an argument , what should be returned is an HTML template
 // use fs pckg to create to OUTPUT dir
 //With HTML templ. we are going to create team.html file
-
-
-function startApp() {
-    //create manager
-    function createManger() {
-        inquirer.prompt([
-            {
-                type: 'input',
-                name: 'managersName',
-                message: "What is your manager's name?",
-                validate: answer => {
-                    if (answer != "") {
-                        return true;
-                    }
-                    return "Please enter a character.";
-                }
-            },
-            {
-                type: 'input',
-                name: 'managersId',
-                message: "What is your manager's Id?",
-                validate: answer => {
-                    const valid = answer.match(
-                        /^[1-9]\d*$/
-                    );
-                    if (valid) {
-                        return true;
-                    }
-                    return "Please enter a number gretaer then 0";
-                }
-            },
-            {
-                type: 'input',
-                name: 'managersEmail',
-                message: "What is your manager's Email address?",
-                validate: answer => {
-                    const mail = answer.match(
-                        /\S+@\S+\.\S+/
-                    );
-                    if (mail) {
-                        return true;
-                    }
-                    return "Please enter a valid email address.";
-                }
-
-            },
-            {
-                type: 'input',
-                name: 'managersOffice',
-                message: "What is your manager's office number?",
-                validate: answer => {
-                    if (answer != "") {
-                        return true;
-                    }
-                    return "Please enter an office number";
-
-                }
-            }
-        ]).then(answer => {
-            console.log(answer.managersName, answer.managersId, answer.managersEmail, answer.managersOffice)
-            const manager = new Manager(answer.managersName, answer.managersId, answer.managersEmail, answer.managersOffice);
-            teamBuild.push(manager);
-            teamId.push(answer.managersId);
-            newMemeber();
-        })
-    }
-    function newMember() {
-        inquirer.prompt([
-            {
-                type: "list",
-                name: "addRole",
-                message: "What type of memeber would you like to add",
-                choices: ["Engineer", "Intern", "No new memembers needed."]
-            }
-        ]).then(memberChoice => {
-            switch (memberChoice.addRole) {
-                case "Engineer":
-                    addEngineer();
-                    break;
-                case "Intern":
-                    addIntern();
-                    break;
-                default:
-                    generateT();
-            }
-        });
-
-        function addEngineer() {
-            inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'engineName',
-                    message: "What is the name of your Engineer?",
-                    validate: answer => {
-                        if (answer != "") {
-                            return true;
-                        }
-                        return "Please enter a character";
-                    }
-                },
-                {
-                    type: 'input',
-                    name: 'engineId',
-                    message: "What is you Engineer's ID?",
-                    validate: answer => {
-                        const valid = answer.match(
-                            /^[1-9]\d*$/
-                        );
-                        if (valid) {
-                            return true;
-                        }
-                        return "Please enter a number gretaer then 0";
-                    }
-                },
-                {
-                    type: 'input',
-                    name: 'engineEmail',
-                    message: "Please enter your Engineer's Email",
-                    validate: answer => {
-                        const mail = answer.match(
-                            /\S+@\S+\.\S+/
-                        );
-                        if (mail) {
-                            return true;
-                        }
-                        return "Please enter a valid email address.";
-                    }
-                },
-                {
-                    type: 'input',
-                    name: 'engineGit',
-                    message: "What is your Engineer's Github username?",
-                    validate: answer => {
-                        if (answer != "") {
-                            return true;
-                        }
-                        return "Please enter a character.";
-                    }
-                }
-            ]).then(answers => {
-                const engineer = new Engineer(answer.engineName, answer.engineId, engineGit);
-                teamBuild.push(engineer);
-                teamId.push(answer.engineId);
-                newMember();
-            });
-        
-        }
-function addIntern()
-        //   functio to decide who to crerate or stop created (switch case)
-
-        //     function for create engineer
-        //     funct for creater intern
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        createManger();
-    }
-    startApp();
-}
-
