@@ -151,7 +151,7 @@ function startApp() {
                 }
             }
         ]).then(answer => {
-            const engineer = new Engineer(answer.engineName, answer.engineId, answer.engineGit);
+            const engineer = new Engineer(answer.engineName, answer.engineId,answer.engineEmail, answer.engineGit);
             teamBuild.push(engineer);
             teamId.push(answer.engineId);
             newMember();
@@ -223,6 +223,7 @@ function startApp() {
             fs.mkdirSync(OUTPUT_DIR)
         };
         return fs.writeFileSync(outputPath, render(teamBuild), "utf8")
+
 
     }
     createManger();
