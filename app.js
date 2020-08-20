@@ -81,7 +81,7 @@ function startApp() {
                     if (answer != "") {
                         return true;
                     }
-                    return "Please enter a character";
+                    return "Please enter a character.";
                 }
             },
             {
@@ -105,14 +105,14 @@ function startApp() {
                 validate: answer => {
                     const mail = answer.match(
                         /\S+@\S+\.\S+/
-                        );
-                        if (mail) {
-                          return true;
-                        }
-                        return "Please enter a valid email address.";
-                      }
-                    
-                },
+                    );
+                    if (mail) {
+                        return true;
+                    }
+                    return "Please enter a valid email address.";
+                }
+
+            },
             {
                 type: 'input',
                 name: 'managersOffice',
@@ -132,39 +132,109 @@ function startApp() {
             teamId.push(answer.managersId);
             newMemeber();
         })
-         }
-    
-}
-function newMember(){
-    inquirer.prompt([
-        {
-type: "list",
-name: "addRole",
-message:"What type of memeber would you like to add",
-choices:["Engineer", "Intern", "No new memembers needed."]
+    }
+    function newMember() {
+        inquirer.prompt([
+            {
+                type: "list",
+                name: "addRole",
+                message: "What type of memeber would you like to add",
+                choices: ["Engineer", "Intern", "No new memembers needed."]
+            }
+        ]).then(memberChoice => {
+            switch (memberChoice.addRole) {
+                case "Engineer":
+                    addEngineer();
+                    break;
+                case "Intern":
+                    addIntern();
+                    break;
+                default:
+                    generateT();
+            }
+        });
+
+        function addEngineer() {
+            inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'engineName',
+                    message: "What is the name of your Engineer?",
+                    validate: answer => {
+                        if (answer != "") {
+                            return true;
+                        }
+                        return "Please enter a character";
+                    }
+                },
+                {
+                    type: 'input',
+                    name: 'engineId',
+                    message: "What is you Engineer's ID?",
+                    validate: answer => {
+                        const valid = answer.match(
+                            /^[1-9]\d*$/
+                        );
+                        if (valid) {
+                            return true;
+                        }
+                        return "Please enter a number gretaer then 0";
+                    }
+                },
+                {
+                    type: 'input',
+                    name: 'engineEmail',
+                    message: "Please enter your Engineer's Email",
+                    validate: answer => {
+                        const mail = answer.match(
+                            /\S+@\S+\.\S+/
+                        );
+                        if (mail) {
+                            return true;
+                        }
+                        return "Please enter a valid email address.";
+                    }
+                },
+                {
+                    type: 'input',
+                    name: 'engineGit',
+                    message: "What is your Engineer's Github username?",
+                    validate: answer => {
+                        if (answer != "") {
+                            return true;
+                        }
+                        return "Please enter a character.";
+                    }
+                }
+            ]).then(answers => {
+                const engineer = new Engineer(answer.engineName, answer.engineId, engineGit);
+                teamBuild.push(engineer);
+                teamId.push(answer.engineId);
+                newMember();
+            });
+        
         }
-    ])
+function addIntern()
+        //   functio to decide who to crerate or stop created (switch case)
+
+        //     function for create engineer
+        //     funct for creater intern
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        createManger();
+    }
+    startApp();
 }
 
-//   functio to decide who to crerate or stop created (switch case)
-
-//     function for create engineer
-//     funct for creater intern
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-createManger();
-startApp();
