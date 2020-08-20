@@ -39,7 +39,7 @@ function startApp() {
                     if (valid) {
                         return true;
                     }
-                    return "Please enter a number gretaer then 0";
+                    return "Please enter a number greater then 0";
                 }
             },
             {
@@ -82,7 +82,7 @@ function startApp() {
             {
                 type: "list",
                 name: "addRole",
-                message: "What type of memeber would you like to add",
+                message: "What type of member would you like to add",
                 choices: ["Engineer", "Intern", "No new memembers needed."]
             }
         ]).then(memberChoice => {
