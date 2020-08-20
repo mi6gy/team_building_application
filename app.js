@@ -9,6 +9,8 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const { ADDRGETNETWORKPARAMS } = require("dns");
+const Choice = require("inquirer/lib/objects/choice");
 
 const teamBuild = [];
 const teamId = [];
@@ -35,9 +37,6 @@ const teamId = [];
 // for further information. Be sure to test out each class and verify it generates an
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
-
-//Global Varibles
-// teamArray=[]
 
 
 //create prompts and prompt them to the use        one mnagers has 8 amount of engineers and interns = one team
@@ -71,8 +70,7 @@ const teamId = [];
 
 
 function startApp() {
-
-    //function to create manager
+    //create manager
     function createManger() {
         inquirer.prompt([
             {
@@ -105,12 +103,16 @@ function startApp() {
                 name: 'managersEmail',
                 message: "What is your manager's Email address?",
                 validate: answer => {
-                    if (answer != "") {
-                        return true;
-                    }
-                    return "Please enter an Email address";
+                    const mail = answer.match(
+                        /\S+@\S+\.\S+/
+                        );
+                        if (mail) {
+                          return true;
+                        }
+                        return "Please enter a valid email address.";
+                      }
+                    
                 },
-            },
             {
                 type: 'input',
                 name: 'managersOffice',
@@ -121,45 +123,48 @@ function startApp() {
                     }
                     return "Please enter an office number";
 
-
                 }
             }
-        ]).then(answers => {
-            const newManager = new Manager(value.name, value.managersId, value.managersEmail, value.managersOffice)
-
-                    //console.log(answers.managersName, answers.managersId, answers.managersEmail, answers.managersOffice)
-                })
-
-    }
-    createManger()
+        ]).then(answer => {
+            console.log(answer.managersName, answer.managersId, answer.managersEmail, answer.managersOffice)
+            const manager = new Manager(answer.managersName, answer.managersId, answer.managersEmail, answer.managersOffice);
+            teamBuild.push(manager);
+            teamId.push(answer.managersId);
+            newMemeber();
+        })
+         }
+    
 }
-startApp();
-
-// function addMembers() {
-//     inquirer.prompt([
-//         {
-//             type: "list",
-//             name: "teamMemeber",
-//             choices: ["Engineer", "Intern", "No more members need to be added"],
-//             message: "What role do you want to add to your team?",
-//         }
-//     ])
-// }
-// addMembers();
+function newMember(){
+    inquirer.prompt([
+        {
+type: "list",
+name: "addRole",
+message:"What type of memeber would you like to add",
+choices:["Engineer", "Intern", "No new memembers needed."]
+        }
+    ])
+}
 
 //   functio to decide who to crerate or stop created (switch case)
 
 //     function for create engineer
 //     funct for creater intern
-// function addEmployee() {
-//     inquirer.prompt({
-//         type: "list",
-//         choices: ["Engineer", "Intern", "DONE"],
-//         name: "adding",
 
 
-//     })
-// }
-// addEmployee();
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+createManger();
+startApp();
