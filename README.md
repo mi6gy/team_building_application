@@ -3,6 +3,8 @@
 <p>Descrption:</p>
 This application takes in employee information used node CLI. After you are finished adding employees, a webpage is generated where each employee is displayed on a card. 
 
+[Video](https://youtu.be/D-qyl9qGW5M)
+
 ### Table of Contents
 * [Description](#descripe)
 * [License](#license)
