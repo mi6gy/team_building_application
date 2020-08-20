@@ -13,11 +13,8 @@ This app helps the user create employee cards.
 * [Github](#github)
 * [linkedin](#linked)
 
- <p>License:</p>
-None
-
-<p>Contributions:</p>
-
+![console](assets/teambuild1.png)
+![webpage](assets/teambuild3.png)
 
 <p>Installation</p>
 install dependencies and run using node app.js

@@ -70,7 +70,7 @@ function startApp() {
                 }
             }
         ]).then(answer => {
-            console.log(answer.managersName, answer.managersId, answer.managersEmail, answer.managersOffice)
+            // console.log(answer.managersName, answer.managersId, answer.managersEmail, answer.managersOffice)
             const manager = new Manager(answer.managersName, answer.managersId, answer.managersEmail, answer.managersOffice);
             teamBuild.push(manager);
             teamId.push(answer.managersId);
@@ -261,10 +261,8 @@ startApp();
 //      - manahers id
 //         -mangers email
 //      -mangers officeNumber
-//var manager = new Manager(anser.name, answer.id)
-// push to teamArray
-
-// - create Engineer
+// push to teambuild
+// - createEngineer
 //      - engineer name
 //      - engineer id
 //         -engineer email
